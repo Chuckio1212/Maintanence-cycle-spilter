@@ -1,0 +1,56 @@
+Sub picture()
+'
+' test 巨集
+
+Sheets.Add.Name = "Chart"
+Dim n As Integer
+Dim i As Integer
+Dim s As Integer
+Dim k As Integer
+Dim ws As Worksheet
+Dim wh As Worksheet
+
+Dim ColX As Range
+Dim ColY As Range
+Dim cho As ChartObject
+
+Set ws = ThisWorkbook.Worksheets("工作表1")
+Set wh = ThisWorkbook.Worksheets("Chart")
+n = WorksheetFunction.Count(ws.Range("B:B"))
+ws.Cells(2, 5).Value = n
+s = 2
+k = 1
+For i = 2 To n + 2
+    If ws.Cells(i + 1, 2).Value >= ws.Cells(i, 2).Value Then
+    ElseIf ws.Cells(i + 1, 2).Value < ws.Cells(i, 2).Value Then
+       ws.Select
+       Set ColX = Range(Cells(s, 2), Cells(i, 2))
+       Set ColY = Range(Cells(s, 3), Cells(i, 3))
+       Set cho = wh.ChartObjects.Add(50, k * 100, 400, 250)
+       
+       With cho.Chart
+            .ChartType = xlXYScatterLines
+            .SeriesCollection.NewSeries
+            .SeriesCollection(1).Values = ColY
+            .SeriesCollection(1).XValues = ColX
+            .HasTitle = True
+            .ChartTitle.Text = ws.Cells(s, 1) & " to " & ws.Cells(i, 1)
+            .HasLegend = False
+        
+                
+'Specify Axis title
+            .Axes(xlCategory, xlPrimary).HasTitle = True
+            .Axes(xlCategory, xlPrimary).AxisTitle.Characters.Text = "RF time"
+        
+            .Axes(xlValue, xlPrimary).HasTitle = False
+        
+'Specify Axis range
+            .Axes(xlValue, xlPrimary).MinimumScaleIsAuto = True
+            .Axes(xlValue, xlPrimary).MaximumScaleIsAuto = True
+        
+        End With
+        k = k + 3
+        s = i + 1
+    End If
+Next
+End Sub
