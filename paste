@@ -1,0 +1,27 @@
+Sheets.Add.Name = "Rf sheet"
+Dim n As Integer
+Dim i As Integer
+Dim s As Integer
+Dim k As Integer
+Dim ws As Worksheet
+Dim wh As Worksheet
+Set ws = ThisWorkbook.Worksheets("工作表1")
+Set wh = ThisWorkbook.Worksheets("Rf Chart")
+n = WorksheetFunction.Count(ws.Range("B:B"))
+ws.Cells(2, 5).Value = n
+s = 2
+k = 1
+For i = 2 To n + 2
+    If ws.Cells(i + 1, 2).Value >= ws.Cells(i, 2).Value Then
+    ElseIf ws.Cells(i + 1, 2).Value < ws.Cells(i, 2).Value Then
+       ws.Select
+       ws.Range(Cells(s, 1), Cells(i, 3)).Select
+       Selection.Copy
+       wh.Select
+       wh.Cells(s, k).Select
+       Selection.PasteSpecial
+       k = k + 3
+       s = i + 1
+    End If
+Next
+End Sub
